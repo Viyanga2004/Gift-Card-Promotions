@@ -2,31 +2,47 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting to Offer...</title>
+  <title>CPA Offer Auto Submit</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    button { padding: 12px 24px; font-size: 18px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h2>🎉 Claim Your Reward</h2>
+  <p>Click the button below to continue to the offer.</p>
+
+  <a href="https://singingfiles.com/show.php?l=0&u=2422502&id=68831" target="_blank" id="offerLink">
+    <button>Continue to Offer</button>
+  </a>
+
+  <form id="redirectForm" method="POST" action="https://singingfiles.com/show.php?l=0&u=2422502&id=68831" style="display:none;">
+    <input type="hidden" name="clickid" id="clickid" value="">
+  </form>
+
   <script>
-    function getClickId() {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("clickid");
+    function getCookie(name) {
+      let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? decodeURIComponent(match[2]) : null;
     }
 
-    function autoSubmit() {
-      const clickid = getClickId();
+    function tryAutoSubmit() {
+      const clickId = getCookie("visitCustomAttribute-click_id") || getCookie("transaction_id");
 
-      if (clickid) {
-        document.getElementById("clickid").value = clickid;
+      if (clickId) {
+        document.getElementById("clickid").value = clickId;
         document.getElementById("redirectForm").submit();
       } else {
-        document.body.innerHTML = "<h2 style='color:red;'>Click ID එක URL එකේ නැහැ. Lead එක trigger වෙන්නෙ නෑ.</h2>";
+        document.body.innerHTML += "<p style='color:red;'>Click ID එක හමු නොවුණා. Lead එක submit වෙන්නෙ නෑ.</p>";
       }
     }
 
-    window.onload = autoSubmit;
+    // 7 seconds wait for user to click + offer to set cookie
+    setTimeout(() => {
+      tryAutoSubmit();
+    }, 7000);
   </script>
-</head>
-<body>
-  <form id="redirectForm" method="POST" action="https://singingfiles.com/show.php?l=0&u=2422502&id=68831">
-    <input type="hidden" name="clickid" id="clickid" value="">
-    <!-- Add other hidden inputs here if needed -->
-  </form>
+
 </body>
 </html>
