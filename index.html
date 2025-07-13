@@ -2,19 +2,20 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>CPA Offer Auto Submit</title>
+  <title>CPA Offer Redirect</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-    button { padding: 12px 24px; font-size: 18px; cursor: pointer; }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
+    button { padding: 14px 28px; font-size: 18px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
 
-  <h2>🎉 Claim Your Reward</h2>
-  <p>Click the button below to continue to the offer.</p>
+  <h1>🎁 Claim Your Reward</h1>
+  <p>Click below to continue to the offer. Please keep this tab open.</p>
 
-  <a href="https://singingfiles.com/show.php?l=0&u=2422502&id=68831" target="_blank" id="offerLink">
-    <button>Continue to Offer</button>
+  <a href="https://singingfiles.com/show.php?l=0&u=2422502&id=68831" target="_blank" onclick="setRedirectTimer()">
+    <button>👉 Continue to Offer</button>
   </a>
 
   <form id="redirectForm" method="POST" action="https://singingfiles.com/show.php?l=0&u=2422502&id=68831" style="display:none;">
@@ -27,21 +28,18 @@
       return match ? decodeURIComponent(match[2]) : null;
     }
 
-    function tryAutoSubmit() {
-      const clickId = getCookie("visitCustomAttribute-click_id") || getCookie("transaction_id");
-
-      if (clickId) {
-        document.getElementById("clickid").value = clickId;
-        document.getElementById("redirectForm").submit();
-      } else {
-        document.body.innerHTML += "<p style='color:red;'>Click ID එක හමු නොවුණා. Lead එක submit වෙන්නෙ නෑ.</p>";
-      }
+    function setRedirectTimer() {
+      // wait 6 seconds after user clicks before trying to get cookie
+      setTimeout(() => {
+        const clickId = getCookie("visitCustomAttribute-click_id") || getCookie("transaction_id");
+        if (clickId) {
+          document.getElementById("clickid").value = clickId;
+          document.getElementById("redirectForm").submit();
+        } else {
+          document.body.innerHTML += "<p style='color:red;'>🚫 Click ID එක හමු නොවුණා. Lead එක trigger වෙන්නෙ නෑ.</p>";
+        }
+      }, 6000); // Wait enough time for cookies to set
     }
-
-    // 7 seconds wait for user to click + offer to set cookie
-    setTimeout(() => {
-      tryAutoSubmit();
-    }, 7000);
   </script>
 
 </body>
